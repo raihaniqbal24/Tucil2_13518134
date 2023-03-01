@@ -4,12 +4,12 @@ import math
 from datetime import datetime
 from operator import itemgetter
 
-# mengurutkan kumpulan titik
+# sort list of points
 def sortListOfPoints(points):
   sortedPoints = sorted(points, key=itemgetter(0,1))
   return sortedPoints
 
-# menghitung jarak euclidean
+# calculate euclidean distance
 def euclidean_distance(p1, p2):
   return math.sqrt(pow((p1[0] - p2[0]), 2) + pow((p1[1] - p2[1]), 2) + pow((p1[2] - p2[2]), 2))
 
@@ -18,8 +18,8 @@ def closestPairBruteForce(thePoints):
   distance = float('inf')
   p = []
   count = 0
-  for i in range(len(thePoints)):
-    for j in range(len(thePoints)):
+  for i in range(len(thePoints)-1):
+    for j in range(i+1, len(thePoints)):
       if (thePoints[i] != thePoints[j]):
         temp_distance = euclidean_distance(thePoints[i], thePoints[j])
         count += 1
@@ -66,35 +66,38 @@ def closestPairDnC(thePoints):
       else:
         return d2, p21, p22, (c1+c2+cg)
 
+# points in grey area
 def closestPairGreyArea(thePoints, dist):
   distance = dist
   p = []
   count = 0
-  grey = sorted(thePoints, key=itemgetter(2))
-  for i in range(len(grey)):
-    for j in range(len(grey)):
-      if (grey[i] != grey[j]):
-        temp_distance = euclidean_distance(grey[i], grey[j])
-        count += 1
-        if( temp_distance < distance):
-          distance = temp_distance
-          p.clear()
-          p.append(grey[i])
-          p.append(grey[j])
+  for i in range(len(thePoints)-1):
+    for j in range(i+1, len(thePoints)):
+      temp_distance = euclidean_distance(thePoints[i], thePoints[j])
+      count += 1
+      if (temp_distance < distance):
+        distance = temp_distance
+        p.clear()
+        p.append(thePoints[i])
+        p.append(thePoints[j])
+  
+  if (len(p) == 0):
+    return distance, None, None, count
+  else:
+    return distance, p[0], p[1], count
 
-  return distance, p[0], p[1], count
 
-
+### MAIN PROGRAM ###
 if __name__ == "__main__":
-  # input jumlah titik oleh pengguna
+  # input number of points by user
   n = int(input("Jumlah titik yang ingin dibangkitkan: "))
 
-  # membangkitkan titik-titik
+  # generate points
   points = []
   for i in range(n):
     point = []
     for j in range(3):
-      point.append(random.randint(0, 10))
+      point.append(random.randint(0, 100))
     points.append(point)
 
   print("kumpulan titik yang dihasilkan:")
@@ -105,13 +108,13 @@ if __name__ == "__main__":
   print(sortedPoints)
   print("")
 
-  # mencari dua buah titik yang memiliki jarak terdekat
+  # find closest pair
   startTime = datetime.now()
   distance, p1, p2, count = closestPairDnC(points)
   finishTime = datetime.now()
   processingTime = finishTime - startTime
 
-  # menampilkan hasil
+  # show result
   print("Jarak terdekat: " + str(distance))
   print("Titik pertama: " + str(p1[0]) + " " + str(p1[1]) + " " + str(p1[2]))
   print("Titik kedua: " + str(p2[0]) + " " + str(p2[1]) + " " + str(p2[2]))
