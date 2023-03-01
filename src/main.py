@@ -101,11 +101,11 @@ if __name__ == "__main__":
     points.append(point)
 
   print("kumpulan titik yang dihasilkan:")
-  print(points)
+  # print(points)
   print("")
   sortedPoints = sortListOfPoints(points)
   print("kumpulan titik yang telah diurutkan:")
-  print(sortedPoints)
+  # print(sortedPoints)
   print("")
 
   # find closest pair
