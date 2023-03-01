@@ -1,7 +1,7 @@
 import random
 import math
-import time
 
+from datetime import datetime
 from operator import itemgetter
 
 # mengurutkan kumpulan titik
@@ -9,11 +9,28 @@ def sortListOfPoints(points):
   sortedPoints = sorted(points, key=itemgetter(0,1))
   return sortedPoints
 
+# brute force
+def closestPairBruteForce(thePoints):
+  distance = float('inf')
+  p = []
+  count = 0
+  for i in range(len(thePoints)):
+    for j in range(len(thePoints)):
+      if (thePoints[i] != thePoints[j]):
+        temp_distance = math.sqrt(pow((thePoints[i][0] - thePoints[j][0]), 2) + pow((thePoints[i][1] - thePoints[j][1]), 2) + pow((thePoints[i][2] - thePoints[j][2]), 2))
+        count += 1
+        if (temp_distance < distance):
+          distance = temp_distance
+          p.clear()
+          p.append(thePoints[i])
+          p.append(thePoints[j])
+
+  return distance, p[0], p[1], count
+
 # divide and conquer
 def closestPairDnC(thePoints):
-  if (len(thePoints) == 2):
-    distance = math.sqrt(pow((thePoints[0][0] - thePoints[1][0]), 2) + pow((thePoints[0][1] - thePoints[1][1]), 2) + pow((thePoints[0][2] - thePoints[1][2]), 2))
-    return distance, thePoints[0], thePoints[1]
+  if (len(thePoints) <= 3):
+    return closestPairBruteForce(thePoints)
   else:
     ptsCount = len(thePoints)
     pts1 = []
@@ -22,12 +39,14 @@ def closestPairDnC(thePoints):
       pts1.append(thePoints[i])
     for i in range(int(ptsCount//2), ptsCount):
       pts2.append(thePoints[i])
-    d1, p11, p12 = closestPairDnC(pts1)
-    d2, p21, p22 = closestPairDnC(pts2)
+    d1, p11, p12, c1 = closestPairDnC(pts1)
+    d2, p21, p22, c2 = closestPairDnC(pts2)
     if (d1 > d2):
-      return d2, p21, p22
+      return d2, p21, p22, c2
     else:
-      return d1, p11, p12
+      return d1, p11, p12, c1
+    # greyArea = []
+
 
 
 if __name__ == "__main__":
@@ -51,13 +70,14 @@ if __name__ == "__main__":
   print("")
 
   # mencari dua buah titik yang memiliki jarak terdekat
-  startTime = time.time()
-  distance, p1, p2 = closestPairDnC(points)
-  finishTime = time.time()
+  startTime = datetime.now()
+  distance, p1, p2, count = closestPairDnC(points)
+  finishTime = datetime.now()
   processingTime = finishTime - startTime
 
   # menampilkan hasil
   print("Jarak terdekat: " + str(distance))
   print("Titik pertama: " + str(p1[0]) + " " + str(p1[1]) + " " + str(p1[2]))
   print("Titik kedua: " + str(p2[0]) + " " + str(p2[1]) + " " + str(p2[2]))
-  print("Waktu pemrosesan: " + str(processingTime))
+  print("Banyaknya operasi perhitungan rumus Euclidian: " + str(count))
+  print("Waktu pemrosesan: " + str(processingTime.total_seconds()))
