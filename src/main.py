@@ -115,8 +115,10 @@ if __name__ == "__main__":
   processingTime = finishTime - startTime
 
   # show result
+  print("HASIL PENCARIAN:")
   print("Jarak terdekat: " + str(distance))
-  print("Titik pertama: " + str(p1[0]) + " " + str(p1[1]) + " " + str(p1[2]))
-  print("Titik kedua: " + str(p2[0]) + " " + str(p2[1]) + " " + str(p2[2]))
+  print("Titik terdekat pertama: " + str(p1[0]) + " " + str(p1[1]) + " " + str(p1[2]))
+  print("Titik terdekat kedua: " + str(p2[0]) + " " + str(p2[1]) + " " + str(p2[2]))
   print("Banyaknya operasi perhitungan rumus Euclidian: " + str(count))
   print("Waktu pemrosesan: " + str(processingTime.total_seconds()))
+  print("(pemrosesan dilakukan menggunakan laptop Lenovo ideapad gaming 3)")
